@@ -1,94 +1,87 @@
-// Описаний в документації
 import flatpickr from 'flatpickr';
-// Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
-
-// Описаний у документації
 import iziToast from 'izitoast';
-// Додатковий імпорт стилів
 import 'izitoast/dist/css/iziToast.min.css';
 
-const input = document.querySelector('#datetime-picker');
-const btnStart = document.querySelector('button[data-start]');
-const day = document.querySelector('span[data-days]');
-const hour = document.querySelector('span[data-hours]');
-const minute = document.querySelector('span[data-minutes]');
-const second = document.querySelector('span[data-seconds]');
+const datetimePicker = document.querySelector('#datetime-picker');
+const startButton = document.querySelector('button[data-start]');
+const daysSpan = document.querySelector('[data-days]');
+const hoursSpan = document.querySelector('[data-hours]');
+const minutesSpan = document.querySelector('[data-minutes]');
+const secondsSpan = document.querySelector('[data-seconds]');
 
-let userSelectedDate = '';
-
-btnStart.disabled = true;
+let countdownInterval = null;
+let userSelectedDate = null;
 
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-
   onClose(selectedDates) {
-    if (options.defaultDate >= selectedDates[0]) {
-      btnStart.disabled = true;
-
+    const selectedDate = selectedDates[0];
+    if (selectedDate <= new Date()) {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
       });
+      startButton.disabled = true;
     } else {
-      userSelectedDate = selectedDates[0];
-      btnStart.disabled = false;
+      userSelectedDate = selectedDate;
+      startButton.disabled = false;
     }
   },
 };
 
-flatpickr(input, options);
+flatpickr(datetimePicker, options);
+
+startButton.addEventListener('click', () => {
+  if (!userSelectedDate) return;
+
+  startButton.disabled = true;
+  datetimePicker.disabled = true;
+
+  countdownInterval = setInterval(() => {
+    const currentTime = new Date();
+    const timeRemaining = userSelectedDate - currentTime;
+
+    if (timeRemaining <= 0) {
+      clearInterval(countdownInterval);
+      iziToast.info({
+        title: 'Complete',
+        message: 'Countdown finished!',
+      });
+      datetimePicker.disabled = false;
+      startButton.disabled = true;
+      return;
+    }
+
+    updateTimer(convertMs(timeRemaining));
+  }, 1000);
+});
+
+function updateTimer({ days, hours, minutes, seconds }) {
+  daysSpan.textContent = addLeadingZero(days);
+  hoursSpan.textContent = addLeadingZero(hours);
+  minutesSpan.textContent = addLeadingZero(minutes);
+  secondsSpan.textContent = addLeadingZero(seconds);
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
 }
-
-function addLeadingZero(value) {
-  return value.toString().padStart(2, 0);
-}
-
-btnStart.addEventListener('click', onClickBtnStart);
-
-function onClickBtnStart(event) {
-  btnStart.disabled = true;
-  input.disabled = true;
-
-  const intervalId = setInterval(() => {
-    const dateNow = new Date();
-    const deltaTime = userSelectedDate - dateNow;
-
-    const { days, hours, minutes, seconds } = convertMs(deltaTime);
-
-    day.innerHTML = addLeadingZero(days);
-    hour.innerHTML = addLeadingZero(hours);
-    minute.innerHTML = addLeadingZero(minutes);
-    second.innerHTML = addLeadingZero(seconds);
-
-    const timerFinished = [days, hours, minutes, seconds].every(
-      value => value === 0
-    );
-
-    if (timerFinished) {
-      clearInterval(intervalId);
-      input.disabled = false;
-    }
-  }, 1000);
-}
+console.log(flatpickr);
