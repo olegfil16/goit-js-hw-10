@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.label-delay {
+  display: flex;
+  flex-direction: column;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
+  gap: 8px;
+  margin-bottom: 16px;
+  text-align: start;
+}
+
+.label-delay input {
+  border: 1px solid #808080;
+  border-radius: 4px;
+  min-width: 346px;
+  height: 40px;
+  outline: transparent;
+  padding-left: 16px;
+  transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.label-delay input:hover {
+  border-color: #000;
+}
+
+.label-delay input:focus,
+.label-delay input:active {
+  border-color: #4e75ff;
+}
+
+fieldset {
+  justify-content: space-around;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  display: flex;
+  width: 340px;
+  margin-bottom: 24px;
+  text-align: start;
+  outline: transparent;
+  transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+fieldset:hover,
+fieldset:focus {
+  border-color: #000;
+}
+
+legend {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
+}
+
+.label-radio {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: #2e2f42;
+  padding: 8px 16px;
+  display: flex;
+}
+
+.label-radio input {
+  border: 1px solid #757575;
+  border-radius: 14px;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+form button {
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 360px;
+  height: 40px;
+  background: #4e75ff;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #fff;
+  transition: background 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+form button:hover,
+form button:focus {
+  background: #6c8cff;
+}
